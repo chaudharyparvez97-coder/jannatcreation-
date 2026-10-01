@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jannat Creation - Admin</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #fff7fb;
+      color: #32152d;
+    }
+
+    .box {
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 5px 25px #00000015;
+    }
+
+    h1 {
+      text-align: center;
+      color: #7b2cbf;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 7px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      border: 0;
+      border-radius: 25px;
+      background: #d63384;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <h1>Jannat Creation</h1>
+    <h2>Admin Panel</h2>
+
+    <label>Product Name</label>
+    <input id="name" type="text" placeholder="Product name">
+
+    <label>Price</label>
+    <input id="price" type="number" placeholder="Price">
+
+    <label>MRP</label>
+    <input id="mrp" type="number" placeholder="MRP">
+
+    <label>Photo URL</label>
+    <input id="image_url" type="text" placeholder="Paste image URL">
+
+    <label>Description</label>
+    <input id="description" type="text" placeholder="Product description">
+
+    <label>Stock</label>
+    <input id="stock" type="number" placeholder="Stock">
+
+    <button onclick="saveProduct()">Save Product</button>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";
+
+    async function saveProduct() {
+      const name = document.getElementById("name").value;
+      const price = document.getElementById("price").value;
+      const mrp = document.getElementById("mrp").value;
+      const image_url = document.getElementById("image_url").value;
+      const description = document.getElementById("description").value;
+      const stock = document.getElementById("stock").value;
+
+      const response = await fetch(
+        SUPABASE_URL + "/rest/v1/products",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + SUPABASE_KEY,
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify({
+            name,
+            price,
+            mrp,
+            image_url,
+            description,
+            stock
+          })
+        }
+      );
+
+      if (response.ok) {
+        document.getElementById("message").innerText =
+          "Product successfully saved!";
+      } else {
+        const error = await response.text();
+        document.getElementById("message").innerText =
+          "Error: " + error;
+      }
+    }
+  </script>
+
+</body>
+</html>
